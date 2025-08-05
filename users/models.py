@@ -3,6 +3,7 @@ from django.db import models
 
 # Create your models here.
 class Manager(UserManager):
+    """User manager"""
     def create_user(self, email, password=None):
         if not email:
             raise ValueError('Пользователь должен иметь email')
@@ -19,6 +20,7 @@ class Manager(UserManager):
         return user
 
 class User(AbstractUser):
+    """User model"""
     objects = Manager()
     username = None
     email = models.EmailField(verbose_name='почта', unique=True)
