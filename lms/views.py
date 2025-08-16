@@ -1,9 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
-from rest_framework.response import Response
 
-from lms.models import Course, Lesson
-from lms.serializers import CourseSerializer, LessonSerializer
+from lms.models import Course, Lesson, Payment
+from lms.serializers import CourseSerializer, LessonSerializer, PaymentSerializer
 
 
 # Create your views here.
@@ -11,6 +10,13 @@ class CourseViewSet(viewsets.ModelViewSet):
     """Course REST"""
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+class PaymentList(generics.ListCreateAPIView):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+    filter_backends = [DjangoFilterBackend]#[SearchFilter, OrderingFilter]
+    filterset_fields = ['course', 'lesson','payment_method', 'user']
+    ordering_fields = ['payment_date']
 
 class LessonList(generics.ListCreateAPIView):
     queryset = Lesson.objects.all()

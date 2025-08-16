@@ -1,0 +1,26 @@
+[
+{
+  "model": "lms.payment",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "payment_date": "2025-08-16T04:28:33.303Z",
+    "course": 3,
+    "lesson": 1,
+    "amount": 1000,
+    "payment_method": "cash"
+  }
+},
+{
+  "model": "lms.payment",
+  "pk": 2,
+  "fields": {
+    "user": 1,
+    "payment_date": "2025-08-16T04:28:47.575Z",
+    "course": 3,
+    "lesson": 3,
+    "amount": 555,
+    "payment_method": "transfer"
+  }
+}
+]
