@@ -1,13 +1,16 @@
 from django.db import models
 
+from config import settings
+
+
 # Create your models here.
 class Course(models.Model):
     """Course model"""
     name = models.CharField(max_length=150, verbose_name='Name', null=True)
     desc = models.CharField(verbose_name='Desc', null=True)
     image = models.ImageField(upload_to='course/', verbose_name='Course picture', null=True)
-
-
+    def __str__(self):
+        return f"{self.name}, {self.desc}"
 
 class Lesson(models.Model):
     """Lesson model"""
@@ -15,4 +18,18 @@ class Lesson(models.Model):
     desc = models.CharField(verbose_name='Desc', null=True)
     url = models.CharField(verbose_name='Video url', null=True)
     image = models.ImageField(upload_to='course/', verbose_name='Lesson picture', null=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lesson_set', null=True)
+    def __str__(self):
+        return f"{self.name}, {self.desc}"
+
+
+class Payment(models.Model):
+    """Payment model"""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='User', null=True)
+    payment_date = models.DateTimeField(auto_now_add=True, verbose_name='Payment date')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='course', null=True)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='lesson', null=True)
+    amount = models.PositiveIntegerField(verbose_name='Payment amount')
+    payment_method = models.CharField(max_length=50, default="cash", choices=[("cash", "Cash payment"), ("transfer", "Bank transfer")])
+    def __str__(self):
+        return f"{self.user}, {self.payment_date}, {self.amount}"
