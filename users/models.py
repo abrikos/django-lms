@@ -23,9 +23,9 @@ class User(AbstractUser):
     """User model"""
     objects = Manager()
     username = None
-    email = models.EmailField(verbose_name='почта', unique=True)
-    avatar = models.ImageField(upload_to='users/', verbose_name='AvatarImage', null=True)
-    phone = models.CharField(max_length=15, verbose_name='Phone', null=True)
-    country = models.CharField(max_length=50, verbose_name='Country', null=True)
+    email = models.EmailField(verbose_name='email', unique=True)
+    avatar = models.ImageField(upload_to='users/', verbose_name='AvatarImage', null=True, blank=True)
+    phone = models.CharField(max_length=15, verbose_name='Phone', null=True, blank=True)
+    country = models.CharField(max_length=50, verbose_name='Country', null=True, blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
