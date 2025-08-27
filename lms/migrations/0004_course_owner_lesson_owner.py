@@ -8,19 +8,29 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('lms', '0003_alter_lesson_course_payment'),
+        ("lms", "0003_alter_lesson_course_payment"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='course',
-            name='owner',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='course_owner_set', to=settings.AUTH_USER_MODEL),
+            model_name="course",
+            name="owner",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="course_owner_set",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='lesson',
-            name='owner',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='lesson_owner_set', to=settings.AUTH_USER_MODEL),
+            model_name="lesson",
+            name="owner",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="lesson_owner_set",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

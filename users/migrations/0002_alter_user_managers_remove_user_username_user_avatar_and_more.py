@@ -8,38 +8,38 @@ import users.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0001_initial'),
+        ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelManagers(
-            name='user',
+            name="user",
             managers=[
-                ('objects', users.models.Manager()),
+                ("objects", users.models.Manager()),
             ],
         ),
         migrations.RemoveField(
-            model_name='user',
-            name='username',
+            model_name="user",
+            name="username",
         ),
         migrations.AddField(
-            model_name='user',
-            name='avatar',
-            field=models.ImageField(null=True, upload_to='users/', verbose_name='AvatarImage'),
+            model_name="user",
+            name="avatar",
+            field=models.ImageField(null=True, upload_to="users/", verbose_name="AvatarImage"),
         ),
         migrations.AddField(
-            model_name='user',
-            name='country',
-            field=models.CharField(max_length=50, null=True, verbose_name='Country'),
+            model_name="user",
+            name="country",
+            field=models.CharField(max_length=50, null=True, verbose_name="Country"),
         ),
         migrations.AddField(
-            model_name='user',
-            name='phone',
-            field=models.CharField(max_length=15, null=True, verbose_name='Phone'),
+            model_name="user",
+            name="phone",
+            field=models.CharField(max_length=15, null=True, verbose_name="Phone"),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='email',
-            field=models.EmailField(max_length=254, unique=True, verbose_name='почта'),
+            model_name="user",
+            name="email",
+            field=models.EmailField(max_length=254, unique=True, verbose_name="почта"),
         ),
     ]

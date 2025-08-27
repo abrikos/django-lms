@@ -7,48 +7,50 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('lms', '0001_initial'),
+        ("lms", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='course',
-            name='desc',
-            field=models.CharField(null=True, verbose_name='Desc'),
+            model_name="course",
+            name="desc",
+            field=models.CharField(null=True, verbose_name="Desc"),
         ),
         migrations.AddField(
-            model_name='course',
-            name='image',
-            field=models.ImageField(null=True, upload_to='course/', verbose_name='Course picture'),
+            model_name="course",
+            name="image",
+            field=models.ImageField(null=True, upload_to="course/", verbose_name="Course picture"),
         ),
         migrations.AddField(
-            model_name='course',
-            name='name',
-            field=models.CharField(max_length=150, null=True, verbose_name='Name'),
+            model_name="course",
+            name="name",
+            field=models.CharField(max_length=150, null=True, verbose_name="Name"),
         ),
         migrations.AddField(
-            model_name='lesson',
-            name='course',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='course', to='lms.course'),
+            model_name="lesson",
+            name="course",
+            field=models.ForeignKey(
+                null=True, on_delete=django.db.models.deletion.CASCADE, related_name="course", to="lms.course"
+            ),
         ),
         migrations.AddField(
-            model_name='lesson',
-            name='desc',
-            field=models.CharField(null=True, verbose_name='Desc'),
+            model_name="lesson",
+            name="desc",
+            field=models.CharField(null=True, verbose_name="Desc"),
         ),
         migrations.AddField(
-            model_name='lesson',
-            name='image',
-            field=models.ImageField(null=True, upload_to='course/', verbose_name='Lesson picture'),
+            model_name="lesson",
+            name="image",
+            field=models.ImageField(null=True, upload_to="course/", verbose_name="Lesson picture"),
         ),
         migrations.AddField(
-            model_name='lesson',
-            name='name',
-            field=models.CharField(max_length=150, null=True, verbose_name='Name'),
+            model_name="lesson",
+            name="name",
+            field=models.CharField(max_length=150, null=True, verbose_name="Name"),
         ),
         migrations.AddField(
-            model_name='lesson',
-            name='url',
-            field=models.CharField(null=True, verbose_name='Video url'),
+            model_name="lesson",
+            name="url",
+            field=models.CharField(null=True, verbose_name="Video url"),
         ),
     ]

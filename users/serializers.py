@@ -12,25 +12,23 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+    password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'password2']
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
+        fields = ["email", "password", "password2"]
+        extra_kwargs = {"password": {"write_only": True}}
 
     def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
+        if attrs["password"] != attrs["password2"]:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
         return attrs
 
     def create(self, validated_data):
         user = User.objects.create_user(
-            email=validated_data['email'],
+            email=validated_data["email"],
         )
-        user.set_password(validated_data['password'])
+        user.set_password(validated_data["password"])
         user.save()
         return user
 
@@ -40,13 +38,13 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = '__all__'
+        fields = "__all__"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        allowed = {'email', 'last_login', 'avatar'}
+        allowed = {"email", "last_login", "avatar"}
         existing = set(self.fields)
-        if self.instance != self.context['request'].user:
+        if self.instance != self.context["request"].user:
             for field_name in existing:
                 if field_name not in allowed:
                     self.fields.pop(field_name)

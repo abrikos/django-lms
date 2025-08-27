@@ -15,6 +15,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         # Write permissions are only allowed to the owner of the snippet.
         return obj.owner == request.user
 
+
 class IsModerator(permissions.BasePermission):
     def has_permission(self, request, view):
-        return request.user and request.user.groups.filter(name='Moderator').exists()
+        return request.user and request.user.groups.filter(name="Moderator").exists()
