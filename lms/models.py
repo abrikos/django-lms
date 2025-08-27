@@ -7,20 +7,22 @@ from config import settings
 class Course(models.Model):
     """Course model"""
     name = models.CharField(max_length=150, verbose_name='Name', null=True)
-    desc = models.CharField(verbose_name='Desc', null=True)
-    image = models.ImageField(upload_to='course/', verbose_name='Course picture', null=True)
+    desc = models.CharField(verbose_name='Desc', null=True, blank=True)
+    image = models.ImageField(upload_to='course/', verbose_name='Course picture', null=True, blank=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='course_owner_set')
     def __str__(self):
-        return f"{self.name}, {self.desc}"
+        return f"{self.id}, {self.name}, {self.desc}"
 
 class Lesson(models.Model):
     """Lesson model"""
     name = models.CharField(max_length=150, verbose_name='Name', null=True)
-    desc = models.CharField(verbose_name='Desc', null=True)
-    url = models.CharField(verbose_name='Video url', null=True)
-    image = models.ImageField(upload_to='course/', verbose_name='Lesson picture', null=True)
+    desc = models.CharField(verbose_name='Desc', null=True, blank=True)
+    url = models.CharField(verbose_name='Video url', null=True, blank=True)
+    image = models.ImageField(upload_to='course/', verbose_name='Lesson picture', null=True, blank=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lesson_set', null=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='lesson_owner_set')
     def __str__(self):
-        return f"{self.name}, {self.desc}"
+        return f"{self.id}, {self.name}, {self.desc}"
 
 
 class Payment(models.Model):
