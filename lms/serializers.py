@@ -1,10 +1,12 @@
 from rest_framework import serializers
 
 from lms.models import Course, Lesson, Payment
+from lms.validators import YoutubeValidator
 
 
 class LessonSerializer(serializers.ModelSerializer):
     """Lesson serializer"""
+    url = serializers.CharField(validators=[YoutubeValidator()])
     class Meta:
         model = Lesson
         fields = ['id', 'name', 'desc', 'image', 'url', 'course']
