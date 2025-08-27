@@ -1,9 +1,12 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, permissions
 from rest_framework.filters import OrderingFilter
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from lms.models import Course, Lesson, Payment
+from lms.models import Course, Lesson, Payment, Subscription
 from lms.permissions import IsOwnerOrReadOnly, IsModerator
 from lms.serializers import CourseSerializer, LessonSerializer, PaymentSerializer
 
@@ -13,7 +16,13 @@ class CourseViewSet(viewsets.ModelViewSet):
     """Course REST"""
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, ~IsModerator]
+
+    def get_permissions(self):
+        if self.action in ['list']:
+            permission_classes = [permissions.AllowAny]
+        else:
+            permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, ~IsModerator]
+        return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -35,3 +44,18 @@ class PaymentList(generics.ListCreateAPIView):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ['course', 'lesson', 'payment_method', 'user']
     ordering_fields = ['payment_date']
+
+class SubscriptionView(APIView):
+    def post(self, request):
+        user = self.request.user
+        course_id=self.request.data['course_id']
+        course = get_object_or_404(Course, pk=course_id)
+        user_subs = Subscription.objects.filter(user=user, course=course)
+        if user_subs.exists():
+            user_subs.delete()
+            message = 'Subscription deleted'
+        else:
+            new_sub = Subscription(user=user, course=course)
+            new_sub.save()
+            message = 'Subscription added'
+        return Response({"message": message})
