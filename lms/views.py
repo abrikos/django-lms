@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from lms.models import Course, Lesson, Payment, Subscription
+from lms.paginators import MyPagination
 from lms.permissions import IsOwnerOrReadOnly, IsModerator
 from lms.serializers import CourseSerializer, LessonSerializer, PaymentSerializer
 
@@ -16,6 +17,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     """Course REST"""
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    pagination_class = MyPagination
 
     def get_permissions(self):
         if self.action in ['list']:
@@ -33,12 +35,13 @@ class LessonViewSet(viewsets.ModelViewSet):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, ~IsModerator]
-
+    pagination_class = MyPagination
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
 
 class PaymentList(generics.ListCreateAPIView):
+    pagination_class = MyPagination
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]

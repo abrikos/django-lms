@@ -33,6 +33,7 @@ class CourseSerializer(serializers.ModelSerializer):
         if request.user in map(lambda x: x.user, obj.course_subscriptions.all()):
             return True
         return False
+
     def get_lesson_count(self, obj):
         return obj.course_lessons.count()
 
