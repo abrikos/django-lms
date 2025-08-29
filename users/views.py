@@ -9,11 +9,13 @@ from users.serializers import MyTokenObtainPairSerializer, UserSerializer
 # Create your views here.
 class MyTokenObtainPairView(TokenObtainPairView):
     """Token view"""
+
     serializer_class = MyTokenObtainPairSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
     """User REST"""
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -21,7 +23,7 @@ class UserViewSet(viewsets.ModelViewSet):
         """
         Instantiates and returns the list of permissions that this view requires.
         """
-        if self.action == 'create':
+        if self.action == "create":
             permission_classes = []
         else:
             permission_classes = [IsAuthenticated]

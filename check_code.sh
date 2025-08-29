@@ -1,9 +1,9 @@
 #!/bin/bash
 echo "======== ISORT =========="
-isort config mailing users
+isort config lms users
 echo "======== BLACK =========="
-black config mailing users
+black config lms users
 echo "======== FLAKE8 =========="
-flake8 config mailing users
+flake8 config lms users
 #echo "======== MYPY =========="
 #mypy config mailing users

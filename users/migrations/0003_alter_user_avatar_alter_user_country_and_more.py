@@ -6,28 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0002_alter_user_managers_remove_user_username_user_avatar_and_more'),
+        ("users", "0002_alter_user_managers_remove_user_username_user_avatar_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='avatar',
-            field=models.ImageField(blank=True, null=True, upload_to='users/', verbose_name='AvatarImage'),
+            model_name="user",
+            name="avatar",
+            field=models.ImageField(blank=True, null=True, upload_to="users/", verbose_name="AvatarImage"),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='country',
-            field=models.CharField(blank=True, max_length=50, null=True, verbose_name='Country'),
+            model_name="user",
+            name="country",
+            field=models.CharField(blank=True, max_length=50, null=True, verbose_name="Country"),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='email',
-            field=models.EmailField(max_length=254, unique=True, verbose_name='email'),
+            model_name="user",
+            name="email",
+            field=models.EmailField(max_length=254, unique=True, verbose_name="email"),
         ),
         migrations.AlterField(
-            model_name='user',
-            name='phone',
-            field=models.CharField(blank=True, max_length=15, null=True, verbose_name='Phone'),
+            model_name="user",
+            name="phone",
+            field=models.CharField(blank=True, max_length=15, null=True, verbose_name="Phone"),
         ),
     ]
