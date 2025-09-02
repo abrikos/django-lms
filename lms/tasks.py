@@ -12,5 +12,5 @@ def my_task():
 
 
 @shared_task
-def send_course_email(to: str, subj: str, message: str):
-    send_mail(subj, message, settings.DEFAULT_FROM_EMAIL, [to])
+def send_course_email(recipients: list, subj: str, message: str):
+    send_mail(subj, message, settings.DEFAULT_FROM_EMAIL, recipients)
