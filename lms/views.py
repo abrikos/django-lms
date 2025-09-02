@@ -12,6 +12,7 @@ from lms.paginators import MyPagination
 from lms.permissions import IsModerator, IsOwnerOrReadOnly
 from lms.serializers import CourseSerializer, LessonSerializer, PaymentSerializer
 from lms.services import stripe_create_product, stripe_create_payment, stripe_check_payment, stripe_get_session
+from lms.tasks import my_task, send_course_email
 
 load_dotenv()
 
@@ -29,10 +30,17 @@ class CourseViewSet(viewsets.ModelViewSet):
             permission_classes = [permissions.AllowAny]
         else:
             permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, ~IsModerator]
+            permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def perform_update(self, serializer):
+        course_name = serializer.validated_data.get('name')
+        course_desc = serializer.validated_data.get('desc')
+        send_course_email.delay(self.request.user,f'Course "{course_name}" updated', f'{course_name}\n{course_desc}')
+
 
 
 class LessonViewSet(viewsets.ModelViewSet):
