@@ -1,11 +1,10 @@
 import os
-from datetime import datetime, timezone
 
 import stripe
 
 from lms.models import Subscription
-from users.models import User
 from lms.tasks import send_email
+from users.models import User
 
 stripe.api_key = os.getenv("STRIPE_API")
 
@@ -41,6 +40,6 @@ def stripe_check_payment(session_id: str):
 
 def email_on_course_update(course):
     subscriptions = Subscription.objects.filter(course=course.id)
-    user_ids = list(map(lambda x: x['user'], subscriptions))
+    user_ids = list(map(lambda x: x["user"], subscriptions))
     recipients = list(map(lambda x: x.email, User.objects.filter(id__in=user_ids)))
-    send_email.delay(recipients, f'Course "{course.name}" updated', f'{course.name}\n{course.desc}')
+    send_email.delay(recipients, f'Course "{course.name}" updated', f"{course.name}\n{course.desc}")

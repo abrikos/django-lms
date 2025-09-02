@@ -16,7 +16,6 @@ def block_inactive_users():
             user.save()
 
 
-
 @shared_task
 def send_email(recipients: list, subj: str, message: str):
     send_mail(subj, message, settings.DEFAULT_FROM_EMAIL, recipients)

@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from .views import CourseViewSet, LessonViewSet, PaymentList, SubscriptionView, CheckPaymentView
+from .views import CheckPaymentView, CourseViewSet, LessonViewSet, PaymentList, SubscriptionView
 
 # Описание маршрутизации для ViewSet
 router = DefaultRouter()
