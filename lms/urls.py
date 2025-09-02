@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from .views import CourseViewSet, LessonViewSet, PaymentList, SubscriptionView
+from .views import CourseViewSet, LessonViewSet, PaymentList, SubscriptionView, CheckPaymentView
 
 # Описание маршрутизации для ViewSet
 router = DefaultRouter()
@@ -12,3 +12,4 @@ urlpatterns = router.urls
 
 urlpatterns.append(path(r"payment/", PaymentList.as_view(), name="payments"))
 urlpatterns.append(path(r"subscription/", SubscriptionView.as_view(), name="subscription"))
+urlpatterns.append(path(r"check-payment/", CheckPaymentView.as_view(), name="check_payment"))
