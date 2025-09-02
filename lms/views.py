@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from django_filters.rest_framework import DjangoFilterBackend
 from dotenv import load_dotenv
 from rest_framework import generics, permissions, viewsets
@@ -11,8 +13,7 @@ from lms.models import Course, Lesson, Payment, Subscription
 from lms.paginators import MyPagination
 from lms.permissions import IsModerator, IsOwnerOrReadOnly
 from lms.serializers import CourseSerializer, LessonSerializer, PaymentSerializer
-from lms.services import stripe_create_product, stripe_create_payment, stripe_check_payment, stripe_get_session
-from lms.tasks import my_task, send_course_email
+from lms.services import stripe_create_product, stripe_create_payment, stripe_check_payment, stripe_get_session, email_on_course_update
 from users.models import User
 
 load_dotenv()
@@ -31,17 +32,14 @@ class CourseViewSet(viewsets.ModelViewSet):
             permission_classes = [permissions.AllowAny]
         else:
             permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, ~IsModerator]
+            permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
     def perform_update(self, serializer):
-        course_name = serializer.validated_data.get('name')
-        course_desc = serializer.validated_data.get('desc')
-        user_ids = list(map(lambda x: x['user'], serializer.data["subscriptions"]))
-        recipients = list(map(lambda x: x.email, User.objects.filter(id__in=user_ids)))
-        send_course_email.delay(recipients, f'Course "{course_name}" updated', f'{course_name}\n{course_desc}')
+        email_on_course_update(serializer.data)
 
 
 class LessonViewSet(viewsets.ModelViewSet):
@@ -49,11 +47,15 @@ class LessonViewSet(viewsets.ModelViewSet):
 
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, ~IsModerator]
+    #permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, ~IsModerator]
     pagination_class = MyPagination
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def perform_update(self, serializer):
+        course = Course.objects.get(pk=serializer.data['course'])
+        email_on_course_update(course)
 
 
 class PaymentList(generics.ListCreateAPIView):
