@@ -11,7 +11,7 @@ from lms.models import Course, Lesson, Payment, Subscription
 from lms.paginators import MyPagination
 from lms.permissions import IsModerator, IsOwnerOrReadOnly
 from lms.serializers import CourseSerializer, LessonSerializer, PaymentSerializer
-from lms.services import stripe_create_product, stripe_create_payment, stripe_check_payment, stripe_get_session
+from lms.services import email_on_course_update, stripe_check_payment, stripe_create_payment, stripe_get_session
 
 load_dotenv()
 
@@ -29,10 +29,15 @@ class CourseViewSet(viewsets.ModelViewSet):
             permission_classes = [permissions.AllowAny]
         else:
             permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, ~IsModerator]
+            permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def perform_update(self, serializer):
+        email_on_course_update(serializer.data)
+        return super().perform_update(serializer)
 
 
 class LessonViewSet(viewsets.ModelViewSet):
@@ -40,15 +45,21 @@ class LessonViewSet(viewsets.ModelViewSet):
 
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, ~IsModerator]
+    # permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, ~IsModerator]
     pagination_class = MyPagination
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+    def perform_update(self, serializer):
+        course = Course.objects.get(pk=serializer.data["course"])
+        email_on_course_update(course)
+        return super().perform_update(serializer)
+
 
 class PaymentList(generics.ListCreateAPIView):
     """Get payments list"""
+
     pagination_class = MyPagination
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
@@ -75,7 +86,7 @@ class SubscriptionView(APIView):
             new_sub = Subscription(user=user, course=course)
             new_sub.save()
             message = "Subscription added"
-            product = stripe_create_product(name=course.name)
+            # product = stripe_create_product(name=course.name)
             price = stripe_create_payment(name=course.name, amount=1000)
             success_url = f"{scheme}://{domain}/payment-done"
             session = stripe_get_session(success_url=success_url, price_id=price.id)
@@ -86,4 +97,4 @@ class CheckPaymentView(APIView):
     """Check stripe session payment"""
 
     def get(self, request):
-        return Response(stripe_check_payment(request.query_params.get('session_id')))
+        return Response(stripe_check_payment(request.query_params.get("session_id")))

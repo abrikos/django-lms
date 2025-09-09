@@ -17,6 +17,8 @@ class Course(models.Model):
     def __str__(self):
         return f"{self.id}, {self.name}, {self.desc}"
 
+    class Meta:
+        ordering = ['-id']  # Order by created_at descending, then by name ascending
 
 class Lesson(models.Model):
     """Lesson model"""
