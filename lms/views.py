@@ -37,6 +37,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         email_on_course_update(serializer.data)
+        return super().perform_update(serializer)
 
 
 class LessonViewSet(viewsets.ModelViewSet):
@@ -53,6 +54,7 @@ class LessonViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         course = Course.objects.get(pk=serializer.data["course"])
         email_on_course_update(course)
+        return super().perform_update(serializer)
 
 
 class PaymentList(generics.ListCreateAPIView):
